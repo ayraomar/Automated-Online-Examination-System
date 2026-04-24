@@ -1,0 +1,77 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class questionNode {
+    public:
+    string questionText;
+    char userSelection;
+    questionNode* next;
+    questionNode* prev;
+
+    questionNode(string qt, char us) {
+        questionText = qt;
+        userSelection = us;
+        next = NULL;
+        prev = NULL;
+    }
+};
+
+class reviewStackNode {
+    public:
+    questionNode* data;
+    reviewStackNode* next;
+
+    reviewStackNode(questionNode* q) {
+        data = q;
+        next = NULL;
+    }
+};
+
+class navcontroller {
+    public:
+    questionNode* currentQues;
+    reviewStackNode* top;
+
+    navcontroller() {
+        currentQues = NULL;
+        top = NULL;
+    }
+
+    void gonext() {
+        if (currentQues != NULL && currentQues->next != NULL) {
+            currentQues = currentQues->next;
+        } else {
+            cout << "This is the last question!\n";
+        }
+    }
+
+    void goback() {
+        if (currentQues != NULL && currentQues->prev != NULL) {
+            currentQues = currentQues->prev;
+        } else {
+            cout << "This is the first question!\n";
+        }
+    }
+
+    void markForReview() {
+        if (currentQues != NULL) {
+            reviewStackNode* newNode = new reviewStackNode(currentQues);
+            newNode->next = top;
+            top = newNode;
+            cout << "Question marked for review!\n";
+        }
+    }
+
+    void openReview() {
+        if (top == NULL) {
+            cout << "No questions marked for review!\n";
+        } else {
+            currentQues = top->data;
+            reviewStackNode* temp = top;
+            top = top->next;
+            delete temp;
+            cout << "Returning to flagged question...\n";
+        }
+    }
+};
