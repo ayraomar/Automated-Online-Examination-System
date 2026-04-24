@@ -1,0 +1,6 @@
+
+// questionText: (string) actual exam question text
+// userSelection: (char)student input (A, B, C, D)
+// correctAnswer: (char)  right answer for grading 
+// next / prev: (pointers)  navigation through the exam 
+// left / right:  difficulty traversal (bin tree)
