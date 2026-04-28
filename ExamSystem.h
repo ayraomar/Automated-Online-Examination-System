@@ -1,26 +1,26 @@
 #ifndef EXAMSYSTEM_H
 #define EXAMSYSTEM_H
 #include <iostream>
+#include <string>
 using namespace std;
 
+// The structure for individual questions in the linked lists
 struct QuestionNode {
-	int id;
-	string questionText;
-	QuestionNode* prev;
-	QuestionNode* next;
-	QuestionNode* left;
-	QuestionNode* right;
-	char correctAnswer;
-	char userSelection;
-	QuestionNode* parent;
+    int id;
+    string questionText;
+    // Linked List Pointers (For the Tiers and Review List)
+    QuestionNode* prev;
+    QuestionNode* next;
+    char correctAnswer;
+    char userSelection;
 };
 
-QuestionNode* createNode(string data) {
-	return new QuestionNode(data);
-}
-
-QuestionNode* findMin(QuestionNode* root) {
-	return root;
-}
+// The structure for the BST Controller
+struct BSTNode {
+    string difficultyLevel; // "Easy", "Medium", "Hard"
+    QuestionNode* head;     // Pointer to the start of the linked list for this tier
+    BSTNode* left;          // Points to "Easy" tier
+    BSTNode* right;         // Points to "Hard" tier
+};
 
 #endif
