@@ -1,0 +1,41 @@
+Set 2: Intermediate (Moderate)
+1. What is the time complexity of a Binary Search on a sorted array?
+   A) O(n) B) O(n log n) C) O(log n) D) O(1)
+2. Which of the following allows "Multiple Inheritance" in Java?
+   A) Classes B) Interfaces C) Abstract Classes D) Not supported at all
+3. What happens in a "Deep Copy"?
+   A) Only pointers are copied B) The actual data is duplicated in new memory C) The original object is deleted D) No memory is allocated
+4. Which sorting algorithm has the worst-case complexity of O(n^2) but is often fast in practice?
+   A) Merge Sort B) Heap Sort C) Quick Sort D) Counting Sort
+5. A 'Virtual Function' is primarily used to achieve:
+   A) Compile-time Polymorphism B) Runtime Polymorphism C) Encapsulation D) Data Hiding
+6. In a Singly Linked List, what is the time complexity to delete the last node?
+   A) O(1) B) O(n) C) O(log n) D) O(1) if tail is known
+7. What is a 'Friend Function' in C++?
+   A) A function that can access private members of a class B) A function that belongs to no class C) A member of a derived class D) A constructor
+8. Which data structure is typically used to implement a recursive function call stack?
+   A) Heap B) Queue C) Stack D) Hash Table
+9. What is the 'this' pointer in C++?
+   A) A pointer to the parent class B) A pointer to the current object instance C) A pointer to the main function D) A null pointer
+10. A Full Binary Tree with n leaves has how many total nodes?
+    A) 2n B) 2n - 1 C) n^2 D) log n
+11. Which of these is an example of "Composition"?
+    A) A 'Car' has an 'Engine' B) A 'Car' is a 'Vehicle' C) A 'Car' can 'Drive' D) None
+12. What is a Memory Leak?
+    A) When the RAM is full B) When allocated memory is not deallocated C) When a pointer points to NULL D) When a program crashes
+13. Which algorithm is used to find the shortest path in a weighted graph?
+    A) Prim’s B) Dijkstra’s C) Kruskal’s D) Huffman Coding
+14. What is the "Diamond Problem" in OOP?
+    A) Circular Dependency B) Ambiguity in Multiple Inheritance C) Memory Overflow D) Recursive Class Definition
+15. What is the load factor of a Hash Table?
+    A) Number of buckets / Number of elements B) Number of elements / Number of buckets C) Complexity of Hashing D) Size of the table
+16. Which of the following is NOT a stable sorting algorithm?
+    A) Insertion Sort B) Merge Sort C) Quick Sort D) Bubble Sort
+17. What does the 'static' keyword do to a class member?
+    A) Makes it constant B) Makes it shared across all instances C) Makes it private D) Makes it thread-safe
+18. A Circular Queue solves which problem of a Linear Queue?
+    A) Overflow B) Underflow C) Wasted space at the front D) Slow insertion
+19. What is the difference between Overloading and Overriding?
+    A) Overloading is at runtime B) Overriding requires inheritance C) Overloading happens in different classes D) They are the same
+20. Which traversal of a Binary Search Tree (BST) produces sorted output?
+    A) Pre-order B) Post-order C) In-order D) Level-order

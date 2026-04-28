@@ -1,0 +1,41 @@
+Set 3: Advanced (Hard)
+1. What is the time complexity of building a Heap from an unordered array of size n?
+   A) O(n log n) B) O(n) C) O(n^2) D) O(log n)
+2. Which of the following is true about an Abstract Class?
+   A) It can be instantiated B) It must contain at least one pure virtual function C) It cannot have constructors D) It cannot have static methods
+3. In the context of AVL Trees, what is the maximum balance factor allowed for any node?
+   A) 0 B) 1 C) 2 D) Unlimited
+4. Which design pattern ensures a class has only one instance?
+   A) Factory B) Observer C) Singleton D) Decorator
+5. What is the space complexity of an adjacency matrix for a graph with V vertices?
+   A) O(V) B) O(E) C) O(V + E) D) O(V^2)
+6. In C++, what is "Object Slicing"?
+   A) Deleting a part of an object B) Assigning a derived class object to a base class object C) Passing an object by reference D) Converting an int to an object
+7. Which of the following is a Self-Balancing Binary Search Tree?
+   A) Splay Tree B) B-Tree C) Red-Black Tree D) All of the above
+8. What is the 'Rule of Three' in C++?
+   A) Constructor, Destructor, Copy Constructor B) If you define one of (Destructor, Copy Constructor, Copy Assignment), you should define all three C) Three levels of inheritance D) Three access specifiers
+9. What is the time complexity of the Floyd-Warshall Algorithm?
+   A) O(V^2) B) O(E log V) C) O(V^3) D) O(V . E)
+10. A 'Trie' data structure is most efficient for:
+    A) Numerical sorting B) Prefix-based string searching C) Finding the shortest path D) Balancing heights
+11. What is the primary advantage of a 'B+ Tree' over a 'B-Tree' in databases?
+    A) Smaller height B) Faster search for a single key C) Better for range queries due to linked leaf nodes D) Uses less memory
+12. Which of the following is NOT true about 'Pure Virtual Destructors'?
+    A) They make a class abstract B) They must be defined outside the class C) They prevent object deletion D) They are used in base classes
+13. What is a 'Perfect Hash Function'?
+    A) A function with no collisions B) A function that maps to a specific range C) A function used in cryptography D) A function that is O(1)
+14. In Amortized Analysis, what is the complexity of an 'append' operation in a Dynamic Array?
+    A) O(n) B) O(log n) C) O(1) D) O(n^2)
+15. What is 'RAII' (Resource Acquisition Is Initialization)?
+    A) A way to initialize variables B) A programming idiom where resource life is tied to object lifetime C) A type of inheritance D) A memory management tool in Java
+16. Which algorithm is used to find the strongly connected components of a directed graph?
+    A) Kruskal's B) Tarjan's C) Bellman-Ford D) Prim's
+17. What is the purpose of a 'Virtual Base Class' in C++?
+    A) To prevent multiple copies of a base class in hybrid inheritance B) To make the class abstract C) To speed up compilation D) To hide data from derived classes
+18. A 'Red-Black Tree' ensures that the longest path is no more than ___ times the shortest path.
+    A) 1.5 B) 2 C) 3 D) log n
+19. Which of the following is a 'Stable' and 'In-place' sorting algorithm?
+    A) Merge Sort B) Quick Sort C) Insertion Sort D) Heap Sort
+20. What is the 'Liskov Substitution Principle'?
+    A) Derived classes must be substitutable for their base classes B) One function can replace another C) Private data cannot be accessed D) Objects should be immutable

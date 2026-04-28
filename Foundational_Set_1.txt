@@ -1,0 +1,41 @@
+Set 1: Foundational (Easy)
+1. Which of the following is a fundamental data type in C++?
+   A) String B) Array C) Integer D) Class
+2. What is the process of wrapping data and functions into a single unit called?
+   A) Inheritance B) Abstraction C) Polymorphism D) Encapsulation
+3. Which data structure uses the LIFO (Last-In-First-Out) principle?
+   A) Queue B) Stack C) Linked List D) Tree
+4. What is the index of the first element in a standard array?
+   A) 1 B) -1 C) 0 D) None of the above
+5. Which loop is guaranteed to execute at least once?
+   A) For B) While C) Do-While D) Nested Loop
+6. In OOP, what is a "blueprint" for creating objects?
+   A) Method B) Variable C) Class D) Instance
+7. What is the time complexity of accessing an element in an array by index?
+   A) O(1) B) O(n) C) O(log n) D) O(n^2)
+8. Which operator is used for the modulo operation?
+   A) / B) % C) * D) &
+9. A function that calls itself is known as:
+   A) Iteration B) Overloading C) Recursion D) Overriding
+10. Which of these is NOT a linear data structure?
+    A) Linked List B) Stack C) Binary Tree D) Queue
+11. What is the purpose of a constructor?
+    A) To delete an object B) To initialize an object C) To copy a function D) To stop a loop
+12. Which access specifier makes members accessible only within the same class?
+    A) Public B) Protected C) Private D) Friend
+13. The '&&' operator represents:
+    A) Logical OR B) Logical AND C) Bitwise AND D) Assignment
+14. What does 'DSA' stand for?
+    A) Data Signal Analysis B) Digital Storage Area C) Data Structures and Algorithms D) Direct System Access
+15. Which of the following is used to end a statement in C++?
+    A) : B) . C) ; D) ,
+16. What is a pointer?
+    A) A variable that stores a value B) A variable that stores a memory address C) A type of loop D) A keyword in OOP
+17. Which data structure is best for BFS (Breadth-First Search)?
+    A) Stack B) Queue C) Priority Queue D) Deque
+18. Inheritance allows a class to:
+    A) Hide data B) Acquire properties of another class C) Delete its own methods D) Be used as a variable
+19. What is the result of 5 / 2 in integer division?
+    A) 2.5 B) 2 C) 3 D) 0
+20. Which keyword is used to return a value from a function?
+    A) break B) void C) return D) exit
