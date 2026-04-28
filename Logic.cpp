@@ -15,7 +15,6 @@ QuestionNode* insert(QuestionNode* root, QuestionNode* parent, int id, string te
         newNode->parent = parent;
         return newNode;
     }
-
     if (id < root->id) root->left = insert(root->left, root, id, text);
     else root->right = insert(root->right, root, id, text);
     return root;
@@ -25,16 +24,6 @@ QuestionNode* getNextQuestion(QuestionNode* current, bool wasCorrect) {
     if (wasCorrect && current->right != nullptr) return current->right;
     if (!wasCorrect && current->left != nullptr) return current->left;
     return nullptr; 
-}
-
-QuestionNode* search(QuestionNode* root, int id) {
-    if (root == nullptr || root->id == id) return root;
-    if (id < root->id) return search(root->left, id);
-    return search(root->right, id);
-}
-
-QuestionNode* getParent(QuestionNode* current) {
-    return current->parent;
 }
 
 void deleteTree(QuestionNode* root) {
