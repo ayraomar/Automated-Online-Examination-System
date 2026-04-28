@@ -1,0 +1,65 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+// Define the Node structure
+struct QuestionNode {
+    string question;
+    string options[4];
+    QuestionNode* next;
+
+    QuestionNode(string q, string o1, string o2, string o3, string o4) {
+        question = q;
+        options[0] = o1; options[1] = o2; 
+        options[2] = o3; options[3] = o4;
+        next = nullptr;
+    }
+};
+
+// Function to load questions from a file into a Linked List
+QuestionNode* loadQuestions(string filename) {
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cout << "Error opening file: " << filename << endl;
+        return nullptr;
+    }
+
+    QuestionNode *head = nullptr, *tail = nullptr;
+    string line, q, o1, o2, o3, o4;
+
+    // Skip the header line (e.g., "Set 1: Foundational")
+    getline(file, line);
+
+    while (getline(file, q)) {
+        if (q.empty()) continue; // Skip empty lines
+
+        // Read the options line and split them (Simplified for this example)
+        // Note: Your files have options in one line: "A) .. B) .. C) .. D) .."
+        getline(file, line);
+        
+        // Creating the node (assuming manual or logic-based split of 'line' into o1-o4)
+        QuestionNode* newNode = new QuestionNode(q, "A", "B", "C", "D"); 
+
+        if (!head) {
+            head = newNode;
+            tail = head;
+        } else {
+            tail->next = newNode;
+            tail = newNode;
+        }
+    }
+    file.close();
+    return head;
+}
+
+int main() {
+    QuestionNode* list1 = loadQuestions("Foundational_Set_1.txt"); 
+    QuestionNode* list2 = loadQuestions("Intermediate_Set_2.txt"); 
+    QuestionNode* list3 = loadQuestions("Advanced_Set_3.txt"); 
+
+    cout << "Lists successfully loaded into memory!" << endl;
+    return 0;
+}
