@@ -1,36 +1,195 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <cassert>
 using namespace std;
 
+
+
 struct QuestionNode {
-    int           index;      
+    int           index;
     string        question;
     string        options[4];   // [0]=A [1]=B [2]=C [3]=D
     QuestionNode* next;
     QuestionNode* prev;
 
-    QuestionNode(int idx, string q, string o1, string o2, string o3, string o4)
+    QuestionNode(int idx, string q,
+                 string o1, string o2, string o3, string o4)
         : index(idx), question(q), next(nullptr), prev(nullptr) {
-        options[0] = o1; options[1] = o2;
-        options[2] = o3; options[3] = o4;
+        options[0]=o1; options[1]=o2;
+        options[2]=o3; options[3]=o4;
     }
 };
 
-struct AnswerNode {
-    int         qIndex;
-    char        selected;
-    AnswerNode* next;
+struct AttemptedNode {
+    QuestionNode*  qPtr;      // points back into the question DLL
+    char           answer;    // 'A' | 'B' | 'C' | 'D'
+    AttemptedNode* next;      // circular: last->next == head
 
-    AnswerNode(int idx) : qIndex(idx), selected('\0'), next(nullptr) {}
+    AttemptedNode(QuestionNode* q, char ans)
+        : qPtr(q), answer(ans), next(nullptr) {}
+};
+
+class AttemptedList {
+public:
+    AttemptedNode* head;
+    AttemptedNode* tail;
+    int            total;
+
+    AttemptedList() : head(nullptr), tail(nullptr), total(0) {}
+
+    AttemptedNode* find(int qIndex) const {
+        if (!head) return nullptr;
+        AttemptedNode* cur = head;
+        do {
+            if (cur->qPtr->index == qIndex) return cur;
+            cur = cur->next;
+        } while (cur != head);
+        return nullptr;
+    }
+
+    void record(QuestionNode* q, char ans) {
+        AttemptedNode* existing = find(q->index);
+        if (existing) {
+            // Question already in CLL — user changed their answer
+            existing->answer = ans;
+            cout << "  [Q" << q->index << " answer updated to: " << ans << "]\n";
+            return;
+        }
+
+        // Brand-new attempt — append to the circle
+        AttemptedNode* node = new AttemptedNode(q, ans);
+        if (!head) {
+            head       = node;
+            tail       = node;
+            node->next = head;  
+        } else {
+            tail->next = node;
+            node->next = head;  
+            tail       = node;
+        }
+        total++;
+        cout << "  [Saved: " << ans << "  |  " << total << " question(s) attempted so far]\n";
+    }
+
+    // ── Has this question been attempted? ────────────────────────
+    bool isAttempted(int qIndex) const {
+        return find(qIndex) != nullptr;
+    }
+
+    // ── Answer stored for a question (or '\0' if not attempted) ──
+    char getAnswer(int qIndex) const {
+        AttemptedNode* node = find(qIndex);
+        return node ? node->answer : '\0';
+    }
+
+    // ── Print every attempted Q+answer by walking the circle ─────
+    void printAll() const {
+        if (!head) { cout << "  (no questions attempted)\n"; return; }
+        AttemptedNode* cur = head;
+        do {
+            cout << "  Q" << cur->qPtr->index
+                 << " : " << cur->answer << "\n";
+            cur = cur->next;
+        } while (cur != head);
+    }
+
+    ~AttemptedList() {
+        if (!head) return;
+        tail->next = nullptr;   // break the circle before deleting
+        AttemptedNode* cur = head;
+        while (cur) {
+            AttemptedNode* tmp = cur;
+            cur = cur->next;
+            delete tmp;
+        }
+    }
 };
 
 struct ReviewNode {
     QuestionNode* qPtr;
     ReviewNode*   next;
-
     ReviewNode(QuestionNode* q) : qPtr(q), next(nullptr) {}
+};
+
+class ReviewList {
+public:
+    ReviewNode* head;
+    ReviewNode* tail;
+    ReviewNode* cursor;
+    int         count;
+
+    ReviewList() : head(nullptr), tail(nullptr), cursor(nullptr), count(0) {}
+
+    void add(QuestionNode* q) {
+        ReviewNode* node = new ReviewNode(q);
+        if (!head) {
+            head = tail = node;
+            node->next  = head;
+            cursor      = head;
+        } else {
+            tail->next  = node;
+            node->next  = head;
+            tail        = node;
+        }
+        count++;
+    }
+
+    bool contains(int qIndex) const {
+        if (!head) return false;
+        ReviewNode* cur = head;
+        do {
+            if (cur->qPtr->index == qIndex) return true;
+            cur = cur->next;
+        } while (cur != head);
+        return false;
+    }
+
+    QuestionNode* getNext() {
+        if (!cursor) return nullptr;
+        QuestionNode* q = cursor->qPtr;
+        cursor = cursor->next;
+        return q;
+    }
+
+    void remove(int qIndex) {
+        if (!head) return;
+        if (count == 1) {
+            if (head->qPtr->index == qIndex) {
+                delete head;
+                head = tail = cursor = nullptr;
+                count = 0;
+            }
+            return;
+        }
+        ReviewNode* prev = tail;
+        ReviewNode* cur  = head;
+        do {
+            if (cur->qPtr->index == qIndex) {
+                prev->next = cur->next;
+                if (cur == head) head = cur->next;
+                if (cur == tail) tail = prev;
+                if (cursor == cur) cursor = cur->next;
+                delete cur;
+                count--;
+                return;
+            }
+            prev = cur;
+            cur  = cur->next;
+        } while (cur != head);
+    }
+
+    bool isEmpty() const { return head == nullptr; }
+
+    ~ReviewList() {
+        if (!head) return;
+        tail->next = nullptr;
+        ReviewNode* cur = head;
+        while (cur) {
+            ReviewNode* tmp = cur;
+            cur = cur->next;
+            delete tmp;
+        }
+    }
 };
 
 class QuestionList {
@@ -41,26 +200,22 @@ public:
 
     QuestionList() : head(nullptr), tail(nullptr), size(0) {}
 
-    // Append a new question to the back of the DLL
-    void append(int idx, string q, string o1, string o2, string o3, string o4) {
-        QuestionNode* node = new QuestionNode(idx, q, o1, o2, o3, o4);
-        if (!head) {
-            head = tail = node;
-        } else {
-            tail->next  = node; 
-            node->prev  = tail;  
-            tail        = node;
+    void append(int idx, string q,
+                string o1, string o2, string o3, string o4) {
+        QuestionNode* node = new QuestionNode(idx,q,o1,o2,o3,o4);
+        if (!head) { head = tail = node; }
+        else {
+            tail->next = node;
+            node->prev = tail;
+            tail       = node;
         }
         size++;
     }
 
     bool validateLinks() const {
         if (!head) return true;
-
-        // Forward pass: check prev links
         QuestionNode* cur = head;
         if (cur->prev != nullptr) return false;
-
         while (cur->next) {
             if (cur->next->prev != cur) return false;
             cur = cur->next;
@@ -68,156 +223,43 @@ public:
         if (cur != tail) return false;
         cur = tail;
         if (cur->next != nullptr) return false;
-
         while (cur->prev) {
             if (cur->prev->next != cur) return false;
             cur = cur->prev;
         }
-        if (cur != head) return false;
-
-        return true;
+        return cur == head;
     }
 
     ~QuestionList() {
         QuestionNode* cur = head;
         while (cur) {
-            QuestionNode* tmp = cur;
-            cur = cur->next;
-            delete tmp;
+            QuestionNode* tmp = cur; cur = cur->next; delete tmp;
         }
     }
 };
 
-class ReviewStack {
-public:
-    ReviewNode* top;
-    int         count;
-
-    ReviewStack() : top(nullptr), count(0) {}
-
-    void push(QuestionNode* q) {
-        ReviewNode* node = new ReviewNode(q);
-        node->next = top;
-        top        = node;
-        count++;
-    }
-
-    QuestionNode* pop() {
-        if (!top) return nullptr;
-        QuestionNode* q    = top->qPtr;
-        ReviewNode*   temp = top;
-        top   = top->next;
-        count--;
-        delete temp;
-        return q;
-    }
-
-    bool isEmpty() const { return top == nullptr; }
-
-    QuestionNode* peek() const {
-        return top ? top->qPtr : nullptr;
-    }
-    bool contains(int qIndex) const {
-        ReviewNode* cur = top;
-        while (cur) {
-            if (cur->qPtr->index == qIndex) return true;
-            cur = cur->next;
-        }
-        return false;
-    }
-
-    ~ReviewStack() {
-        while (top) {
-            ReviewNode* tmp = top;
-            top = top->next;
-            delete tmp;
-        }
-    }
-};
-
-class AnswerList {
-public:
-    AnswerNode* head;
-
-    AnswerList() : head(nullptr) {}
-
-    void addSlot(int qIndex) {
-        AnswerNode* node = new AnswerNode(qIndex);
-        if (!head) {
-            head = node;
-            return;
-        }
-        AnswerNode* cur = head;
-        while (cur->next) cur = cur->next;
-        cur->next = node;
-    }
-
-    AnswerNode* find(int qIndex) {
-        AnswerNode* cur = head;
-        while (cur) {
-            if (cur->qIndex == qIndex) return cur;
-            cur = cur->next;
-        }
-        return nullptr;
-    }
-
-    bool setAnswer(int qIndex, char choice) {
-        AnswerNode* ans = find(qIndex);
-        if (!ans) return false;
-        ans->selected = choice;
-        return true;
-    }
-
-    int countAnswered() const {
-        int n = 0;
-        AnswerNode* cur = head;
-        while (cur) {
-            if (cur->selected != '\0') n++;
-            cur = cur->next;
-        }
-        return n;
-    }
-
-    ~AnswerList() {
-        AnswerNode* cur = head;
-        while (cur) {
-            AnswerNode* tmp = cur;
-            cur = cur->next;
-            delete tmp;
-        }
-    }
-};
-
+//  NAV CONTROLLER
+//  attemptedList is now passed in from main so one object is shared
+//  across the whole session.
 class NavController {
 public:
     QuestionNode* current;
-    ReviewStack   reviewStack;
+    ReviewList    reviewList;
 
     NavController(QuestionNode* head) : current(head) {}
 
     bool goNext() {
-        if (current && current->next) {
-            current = current->next;
-            return true;
-        }
-        return false;  
+        if (current && current->next) { current = current->next; return true; }
+        return false;
     }
-
     bool goBack() {
-        if (current && current->prev) {
-            current = current->prev;
-            return true;
-        }
-        return false;  
+        if (current && current->prev) { current = current->prev; return true; }
+        return false;
     }
-
-    bool jumpTo(int qIndex, QuestionNode* head) {
-        QuestionNode* cur = head;
+    bool jumpTo(int qIndex, QuestionNode* listHead) {
+        QuestionNode* cur = listHead;
         while (cur) {
-            if (cur->index == qIndex) {
-                current = cur;
-                return true;
-            }
+            if (cur->index == qIndex) { current = cur; return true; }
             cur = cur->next;
         }
         return false;
@@ -225,102 +267,106 @@ public:
 
     void markForReview() {
         if (!current) return;
-        if (reviewStack.contains(current->index)) {
+        if (reviewList.contains(current->index)) {
             cout << "  [Q" << current->index << " is already marked for review]\n";
             return;
         }
-        reviewStack.push(current);
-        cout << "  [Q" << current->index << " marked for review - "
-             << reviewStack.count << " flagged total]\n";
+        reviewList.add(current);
+        cout << "  [Q" << current->index << " marked for review — "
+             << reviewList.count << " flagged total]\n";
     }
 
     bool openReview() {
-        QuestionNode* q = reviewStack.pop();
+        QuestionNode* q = reviewList.getNext();
         if (!q) return false;
         current = q;
         return true;
+    }
+
+    void doneReviewing() {
+        if (!current) return;
+        reviewList.remove(current->index);
+        cout << "  [Q" << current->index << " removed from review list — "
+             << reviewList.count << " remaining]\n";
     }
 
     bool isAtFirst() const { return current && current->prev == nullptr; }
     bool isAtLast()  const { return current && current->next == nullptr; }
 };
 
-bool loadFromFile(const string& filename, QuestionList& qList, AnswerList& aList) {
+bool loadFromFile(const string& filename, QuestionList& qList) {
     ifstream file(filename);
     if (!file.is_open()) {
         cout << "Error: could not open \"" << filename << "\"\n";
         return false;
     }
-
     string q, o1, o2, o3, o4, blank;
     int    idx = 1;
-
     while (getline(file, q)) {
         if (q.empty()) continue;
-
         if (!getline(file, o1)) break;
         if (!getline(file, o2)) break;
         if (!getline(file, o3)) break;
         if (!getline(file, o4)) break;
         getline(file, blank);
-
         qList.append(idx, q, o1, o2, o3, o4);
-        aList.addSlot(idx);
         idx++;
     }
-
     file.close();
-    return idx > 1; 
+    return idx > 1;
 }
 
-void displayQuestion(QuestionNode* q, AnswerList& aList, const ReviewStack& rStack) {
+//  DISPLaY  —  reads answer status from AttemptedList CLL
+void displayQuestion(QuestionNode* q,
+                     const AttemptedList& attempted,
+                     const ReviewList&    rList) {
     if (!q) return;
-    cout << "  Q" << q->index << ": " << q->question << "\n";
-
-    char labels[] = {'A', 'B', 'C', 'D'};
+    cout << "\n  Q" << q->index << ": " << q->question << "\n";
+    char labels[] = {'A','B','C','D'};
     for (int i = 0; i < 4; i++)
         cout << "  " << labels[i] << ") " << q->options[i] << "\n";
 
-    AnswerNode* ans = aList.find(q->index);
+    char ans = attempted.getAnswer(q->index);
     cout << "  Answer   : ";
-    if (ans && ans->selected != '\0')
-        cout << ans->selected << "\n";
-    else
-        cout << "(unanswered)\n";
+    if (ans != '\0') cout << ans << "\n";
+    else             cout << "(unanswered)\n";
 
-    cout << "  Flagged  : " << (rStack.contains(q->index) ? "Yes" : "No") << "\n";
+    cout << "  Flagged  : " << (rList.contains(q->index) ? "Yes" : "No") << "\n";
 }
 
-void recordAnswer(QuestionNode* current, AnswerList& aList) {
+void recordAnswer(QuestionNode* current, AttemptedList& attempted) {
     if (!current) return;
     char choice;
     cout << "Enter answer (A/B/C/D): ";
     cin  >> choice;
     choice = toupper(choice);
-
     if (choice < 'A' || choice > 'D') {
-        cout << "  [Invalid - enter A, B, C, or D]\n";
+        cout << "  [Invalid — enter A, B, C, or D]\n";
         return;
     }
-    aList.setAnswer(current->index, choice);
-    cout << "  [Saved: " << choice << "]\n";
+    // record() handles both new attempts and answer changes
+    attempted.record(current, choice);
 }
 
-void showSummary(QuestionNode* qHead, AnswerList& aList) {
+void showSummary(QuestionNode* qHead,
+                 const AttemptedList& attempted,
+                 int totalQuestions) {
 
+    cout << "\n  ── Attempted Questions (CLL order) ──\n";
+    attempted.printAll();   
+
+    cout << "\n  ── Skipped Questions ──\n";
+    int skipped = 0;
     QuestionNode* q = qHead;
-    int total = 0;
     while (q) {
-        total++;
-        AnswerNode* ans = aList.find(q->index);
-        cout << "  Q" << q->index << " : ";
-        if (ans && ans->selected != '\0')
-            cout << ans->selected;
-        else
-            cout << "(skipped)";
-        cout << "\n";
+        if (!attempted.isAttempted(q->index)) {
+            cout << "  Q" << q->index << " : (skipped)\n";
+            skipped++;
+        }
         q = q->next;
     }
-    cout << "  Answered : " << aList.countAnswered() << " / " << total << "\n";
-}
+    if (skipped == 0) cout << "  (none — all questions answered!)\n";
 
+    cout << "\n  Answered : " << attempted.total
+         << " / " << totalQuestions << "\n";
+}
