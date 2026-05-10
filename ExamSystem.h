@@ -21,6 +21,7 @@ struct BSTNode {
     QuestionNode* head;     // Pointer to the start of the linked list for this tier
     BSTNode* left;          // Points to "Easy" tier
     BSTNode* right;         // Points to "Hard" tier
+    BSTNode* parent;
 };
 
 #endif
