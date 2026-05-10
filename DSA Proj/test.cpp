@@ -4,8 +4,113 @@
 #include "submission.h"
 #include "PracticeManager.h"
 #include <iostream>
+#include <fstream>
 
 using namespace std;
+
+// ─────────────────────────────────────────────────────────────
+//  Leaderboard  (insertion-sort linked list, descending score)
+// ─────────────────────────────────────────────────────────────
+struct LeaderboardEntry {
+    string            studentName;
+    string            studentID;
+    double            score;
+    char              grade;
+    LeaderboardEntry* next;
+
+    LeaderboardEntry(const string& n, const string& id,
+                     double s, char g)
+        : studentName(n), studentID(id),
+          score(s), grade(g), next(nullptr) {}
+};
+
+class Leaderboard {
+public:
+    LeaderboardEntry* head;
+    int               count;
+
+    // ── Constructor: restore saved entries on startup ─────────
+    Leaderboard() : head(nullptr), count(0) {
+        loadFromFile();
+    }
+
+    // ── Destructor ────────────────────────────────────────────
+    ~Leaderboard() {
+        LeaderboardEntry* cur = head;
+        while (cur) {
+            LeaderboardEntry* tmp = cur;
+            cur = cur->next;
+            delete tmp;
+        }
+    }
+
+    // ── Raw insert used internally (no file save) ─────────────
+    void rawInsert(const string& name, const string& id,
+                   double score, char grade) {
+        LeaderboardEntry* node = new LeaderboardEntry(name, id, score, grade);
+        if (!head || score > head->score) {
+            node->next = head;
+            head       = node;
+        } else {
+            LeaderboardEntry* cur = head;
+            while (cur->next && cur->next->score >= score)
+                cur = cur->next;
+            node->next = cur->next;
+            cur->next  = node;
+        }
+        count++;
+    }
+
+    // ── Public insert: sorted + persisted ────────────────────
+    void insertSorted(const string& name, const string& id,
+                      double score, char grade) {
+        rawInsert(name, id, score, grade);
+        saveToFile();
+    }
+
+    // ── Load from Leaderboard.txt on startup ──────────────────
+    void loadFromFile() {
+        ifstream file("Leaderboard.txt");
+        if (!file.is_open()) return;   // first run, file doesn't exist yet
+
+        string line;
+        while (getline(file, line)) {
+            if (line.empty()) continue;
+
+            size_t p1 = line.find('|');
+            size_t p2 = line.find('|', p1 + 1);
+            size_t p3 = line.find('|', p2 + 1);
+
+            if (p1 == string::npos || p3 == string::npos) continue;
+
+            string name  = line.substr(0, p1);
+            string id    = line.substr(p1 + 1, p2 - p1 - 1);
+            double score = stod(line.substr(p2 + 1, p3 - p2 - 1));
+            char   grade = line[p3 + 1];
+
+            rawInsert(name, id, score, grade);
+        }
+        file.close();
+    }
+
+    // ── Save entire leaderboard to Leaderboard.txt ────────────
+    void saveToFile() const {
+        ofstream file("Leaderboard.txt");
+        if (!file.is_open()) {
+            cout << "  [Warning: could not save leaderboard]\n";
+            return;
+        }
+        LeaderboardEntry* cur = head;
+        while (cur) {
+            file << cur->studentName << "|"
+                 << cur->studentID   << "|"
+                 << cur->score       << "|"
+                 << cur->grade       << "\n";
+            cur = cur->next;
+        }
+        file.close();
+    }
+};
 
 // ─────────────────────────────────────────────────────────────
 //  Display a question during the exam
@@ -67,7 +172,8 @@ void runReviewMode(SkippedList& skippedList, AttemptedList& attemptedList) {
 // ─────────────────────────────────────────────────────────────
 //  Start Quiz -- full adaptive exam session
 // ─────────────────────────────────────────────────────────────
-void startQuiz(const string& studentName, const string& studentID) {
+void startQuiz(const string& studentName, const string& studentID,
+               Leaderboard& leaderboard) {
     ExamManager     manager;
     ReviewCLL       reviewSystem;
     AttemptedList   attemptedList;
@@ -204,7 +310,59 @@ void startQuiz(const string& studentName, const string& studentID) {
     submission.totalQuestions = MAX_QUESTIONS;
 
     submissionQueue.enqueue(submission);
+
+    // ── Calculate score for leaderboard ──────────────────────
+    int correct = 0;
+    AttemptedNode* cur = attemptedList.head;
+    if (cur) {
+        do {
+            if (cur->answer == cur->qPtr->correctAnswer)
+                correct++;
+            cur = cur->next;
+        } while (cur != attemptedList.head);
+    }
+    double pct = (static_cast<double>(correct) / MAX_QUESTIONS) * 100.0;
+
+    char gradeChar;
+    if      (pct >= 90) gradeChar = 'A';
+    else if (pct >= 80) gradeChar = 'B';
+    else if (pct >= 70) gradeChar = 'C';
+    else if (pct >= 60) gradeChar = 'D';
+    else                gradeChar = 'F';
+
+    leaderboard.insertSorted(studentName, studentID, pct, gradeChar);
+
     gradeSubmission(submissionQueue, skippedList.count);
+}
+
+// ─────────────────────────────────────────────────────────────
+//  View Leaderboard
+// ─────────────────────────────────────────────────────────────
+void viewLeaderboard(const Leaderboard& lb) {
+    cout << "\n==============================================";
+    cout << "\n              LEADERBOARD";
+    cout << "\n==============================================";
+
+    if (!lb.head) {
+        cout << "\n  [No results yet -- take the exam first]\n";
+        cout << "==============================================\n";
+        return;
+    }
+
+    cout << "\n  Rank  Name                  ID            Score    Grade";
+    cout << "\n----------------------------------------------\n";
+
+    LeaderboardEntry* cur  = lb.head;
+    int               rank = 1;
+    while (cur) {
+        cout << "  " << rank++ << ".    "
+             << cur->studentName << "\t\t"
+             << cur->studentID   << "\t"
+             << cur->score       << "%\t"
+             << cur->grade       << "\n";
+        cur = cur->next;
+    }
+    cout << "==============================================\n";
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -247,29 +405,17 @@ void practiceMenu(PracticeManager& practice) {
 }
 
 // ─────────────────────────────────────────────────────────────
-//  Leaderboard placeholder (to be implemented next)
-// ─────────────────────────────────────────────────────────────
-void viewLeaderboard() {
-    cout << "\n==============================================";
-    cout << "\n            LEADERBOARD";
-    cout << "\n==============================================";
-    cout << "\n  [Coming soon -- no results saved yet]\n";
-    cout << "==============================================\n";
-}
-
-// ─────────────────────────────────────────────────────────────
 //  MAIN -- Main Menu
 // ─────────────────────────────────────────────────────────────
 int main() {
-    // Pre-load practice questions once at startup
     PracticeManager practice;
+    Leaderboard     leaderboard;    // loads from Leaderboard.txt automatically
 
     cout << "\n==============================================";
     cout << "\n       ADAPTIVE EXAM SYSTEM";
     cout << "\n        NUCES-FAST  |  CS2001";
     cout << "\n==============================================\n";
 
-    // Student login -- collected once, reused if they start quiz
     string studentName, studentID;
     cout << "Enter your name: ";
     getline(cin, studentName);
@@ -293,10 +439,10 @@ int main() {
         cin.ignore(1000, '\n');
 
         if (choice == 1) {
-            startQuiz(studentName, studentID);
+            startQuiz(studentName, studentID, leaderboard);
         }
         else if (choice == 2) {
-            viewLeaderboard();
+            viewLeaderboard(leaderboard);
         }
         else if (choice == 3) {
             practiceMenu(practice);
