@@ -1,5 +1,4 @@
 #include "PracticeManager.h"
-#include <algorithm>
 using namespace std;
 
 // =============================================================
@@ -80,10 +79,21 @@ void PracticeManager::loadFromFile(const string& filename) {
 // ─────────────────────────────────────────────────────────────
 bool PracticeManager::containsIgnoreCase(const string& haystack,
                                           const string& needle) const {
+    if (needle.empty()) return true;
+    if (needle.size() > haystack.size()) return false;
+
+    // Manually lowercase both strings without transform()
     string h = haystack;
     string n = needle;
-    transform(h.begin(), h.end(), h.begin(), ::tolower);
-    transform(n.begin(), n.end(), n.begin(), ::tolower);
+
+    for (int i = 0; i < (int)h.size(); i++)
+        if (h[i] >= 'A' && h[i] <= 'Z')
+            h[i] = h[i] + 32;
+
+    for (int i = 0; i < (int)n.size(); i++)
+        if (n[i] >= 'A' && n[i] <= 'Z')
+            n[i] = n[i] + 32;
+
     return h.find(n) != string::npos;
 }
 
