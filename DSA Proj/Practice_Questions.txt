@@ -1,0 +1,30 @@
+Which of the following is a fundamental data type in C++?|int|string|vector|list|A
+What is the index of the first element in an array?|1|-1|0|Any number|C
+Which operator is used for the logical AND operation?|&|&&||||!|B
+Which loop is guaranteed to execute at least once?|for|while|do-while|if|C
+How do you start a single-line comment in C++?|//|/*|#|--|A
+What is the purpose of the 'break' statement?|Start a loop|Exit a loop or switch|Skip an iteration|Declare a variable|B
+Which header file is needed for input and output operations?|<fstream>|<iostream>|<cmath>|<string>|B
+What does 'cout' do in C++?|Takes input|Performs math|Displays output|Closes a file|C
+Which data type is used to store a single character?|string|char|float|bool|B
+What is the extension of a C++ source file?|.cpp|.h|.exe|.py|A
+What is the time complexity to access an element in an array by index?|O(n)|O(log n)|O(1)|O(n^2)|C
+Which data structure follows the LIFO (Last In First Out) principle?|Queue|Stack|Linked List|Tree|B
+A pointer stores the ________ of another variable.|Value|Size|Memory Address|Name|C
+In a binary search tree, the left child is always ________ than the parent.|Greater|Smaller|Equal|Twice|B
+Which sorting algorithm has a worst-case complexity of O(n^2)?|Merge Sort|Quick Sort|Heap Sort|Binary Search|B
+What is a dangling pointer?|Points to NULL|Points to a deleted memory location|Points to an array|Not initialized|B
+How many children can a node in a Binary Tree have at most?|1|2|3|Unlimited|B
+Which data structure is best for implementing a BFS traversal?|Stack|Queue|Priority Queue|Array|B
+What is the result of 'sizeof(int)' on most 64-bit systems?|1 byte|2 bytes|4 bytes|8 bytes|C
+Which function is used to find the length of a string in C++?|length()|size()|Both A and B|count()|C
+What is the time complexity of building a heap using the bottom-up approach?|O(n)|O(n log n)|O(log n)|O(1)|A
+Which tree traversal is used to get elements of a BST in sorted order?|Pre-order|Post-order|In-order|Level-order|C
+What is the height of a balanced AVL tree with n nodes?|O(n)|O(log n)|O(n log n)|O(1)|B
+In Amortized Analysis, the cost of an operation is averaged over:|Worst case|Best case|A sequence of operations|A single run|C
+Which hashing technique uses linked lists to handle collisions?|Linear Probing|Quadratic Probing|Chaining|Double Hashing|C
+What is the time complexity of the Floyd-Warshall algorithm?|O(V^2)|O(V^3)|O(E log V)|O(V+E)|B
+Which property is NOT required for a Red-Black Tree?|Root is black|Leaves are black|No two red nodes are adjacent|Every node is red|D
+What is the space complexity of an Adjacency Matrix for a graph with V vertices?|O(V)|O(E)|O(V^2)|O(V+E)|C
+Which algorithm is used to find the Minimum Spanning Tree?|Dijkstra's|Kruskal's|Bellman-Ford|A* Search|B
+What is the time complexity to delete a node in a Doubly Linked List if the node pointer is given?|O(n)|O(1)|O(log n)|O(n log n)|B
