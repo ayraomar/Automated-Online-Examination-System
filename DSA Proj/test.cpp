@@ -71,7 +71,7 @@ public:
     // ── Load from Leaderboard.txt on startup ──────────────────
     void loadFromFile() {
         ifstream file("Leaderboard.txt");
-        if (!file.is_open()) return;   // first run, file doesn't exist yet
+        if (!file.is_open()) return;
 
         string line;
         while (getline(file, line)) {
@@ -172,8 +172,16 @@ void runReviewMode(SkippedList& skippedList, AttemptedList& attemptedList) {
 // ─────────────────────────────────────────────────────────────
 //  Start Quiz -- full adaptive exam session
 // ─────────────────────────────────────────────────────────────
-void startQuiz(const string& studentName, const string& studentID,
-               Leaderboard& leaderboard) {
+void startQuiz(Leaderboard& leaderboard) {
+
+    // ── Collect student info fresh for every quiz ─────────────
+    string studentName, studentID;
+    cout << "\nEnter your name: ";
+    getline(cin, studentName);
+    cout << "Enter your ID  : ";
+    getline(cin, studentID);
+    cout << "\nWelcome, " << studentName << "!\n";
+
     ExamManager     manager;
     ReviewCLL       reviewSystem;
     AttemptedList   attemptedList;
@@ -336,6 +344,19 @@ void startQuiz(const string& studentName, const string& studentID,
 }
 
 // ─────────────────────────────────────────────────────────────
+//  Helper: left-pad a string to a fixed width
+// ─────────────────────────────────────────────────────────────
+string padRight(const string& s, int width) {
+    if ((int)s.size() >= width) return s.substr(0, width);
+    return s + string(width - s.size(), ' ');
+}
+
+string padLeft(const string& s, int width) {
+    if ((int)s.size() >= width) return s.substr(0, width);
+    return string(width - s.size(), ' ') + s;
+}
+
+// ─────────────────────────────────────────────────────────────
 //  View Leaderboard
 // ─────────────────────────────────────────────────────────────
 void viewLeaderboard(const Leaderboard& lb) {
@@ -349,19 +370,43 @@ void viewLeaderboard(const Leaderboard& lb) {
         return;
     }
 
-    cout << "\n  Rank  Name                  ID            Score    Grade";
-    cout << "\n----------------------------------------------\n";
+    // Fixed column widths
+    const int W_RANK  = 5;
+    const int W_NAME  = 20;
+    const int W_ID    = 12;
+    const int W_SCORE = 10;
+    const int W_GRADE = 5;
+
+    cout << "\n  "
+         << padRight("Rank",  W_RANK)
+         << padRight("Name",  W_NAME)
+         << padRight("ID",    W_ID)
+         << padLeft ("Score", W_SCORE)
+         << padLeft ("Grade", W_GRADE);
+    cout << "\n  " << string(W_RANK+W_NAME+W_ID+W_SCORE+W_GRADE, '-') << "\n";
 
     LeaderboardEntry* cur  = lb.head;
     int               rank = 1;
     while (cur) {
-        cout << "  " << rank++ << ".    "
-             << cur->studentName << "\t\t"
-             << cur->studentID   << "\t"
-             << cur->score       << "%\t"
-             << cur->grade       << "\n";
+        // Build score string e.g. "66.67%"
+        // Manual double->string with 2 decimal places without <iomanip>
+        int    whole = (int)cur->score;
+        int    frac  = (int)((cur->score - whole) * 100 + 0.5);
+        string scoreStr = to_string(whole) + "."
+                        + (frac < 10 ? "0" : "")
+                        + to_string(frac) + "%";
+
+        cout << "  "
+             << padRight(to_string(rank), W_RANK)
+             << padRight(cur->studentName,  W_NAME)
+             << padRight(cur->studentID,    W_ID)
+             << padLeft (scoreStr,          W_SCORE)
+             << padLeft (string(1, cur->grade), W_GRADE)
+             << "\n";
+        rank++;
         cur = cur->next;
     }
+    cout << "  " << string(W_RANK+W_NAME+W_ID+W_SCORE+W_GRADE, '-') << "\n";
     cout << "==============================================\n";
 }
 
@@ -416,14 +461,6 @@ int main() {
     cout << "\n        NUCES-FAST  |  CS2001";
     cout << "\n==============================================\n";
 
-    string studentName, studentID;
-    cout << "Enter your name: ";
-    getline(cin, studentName);
-    cout << "Enter your ID  : ";
-    getline(cin, studentID);
-    cout << "\nWelcome, " << studentName << "!\n";
-
-    // ── Main Menu Loop ────────────────────────────────────────
     int choice;
     while (true) {
         cout << "\n==============================================";
@@ -439,7 +476,7 @@ int main() {
         cin.ignore(1000, '\n');
 
         if (choice == 1) {
-            startQuiz(studentName, studentID, leaderboard);
+            startQuiz(leaderboard);
         }
         else if (choice == 2) {
             viewLeaderboard(leaderboard);
@@ -448,7 +485,7 @@ int main() {
             practiceMenu(practice);
         }
         else if (choice == 4) {
-            cout << "\nGoodbye, " << studentName << "!\n";
+            cout << "\nGoodbye!\n";
             break;
         }
         else {
