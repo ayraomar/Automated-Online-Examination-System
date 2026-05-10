@@ -1,0 +1,20 @@
+Which of the following is a fundamental data type in C++?|String|Array|Integer|Class|C
+What is the process of wrapping data and functions into a single unit called?|Inheritance|Abstraction|Polymorphism|Encapsulation|D
+Which data structure uses the LIFO (Last-In-First-Out) principle?|Queue|Stack|Linked List|Tree|B
+What is the index of the first element in a standard array?|1|-1|0|None of the above|C
+Which loop is guaranteed to execute at least once?|For|While|Do-While|Nested Loop|C
+In OOP, what is a "blueprint" for creating objects?|Method|Variable|Class|Instance|C
+What is the time complexity of accessing an element in an array by index?|O(1)|O(n)|O(log n)|O(n^2)|A
+Which operator is used for the modulo operation?|/|%|*|&|B
+A function that calls itself is known as:|Iteration|Overloading|Recursion|Overriding|C
+Which of these is NOT a linear data structure?|Linked List|Stack|Binary Tree|Queue|C
+What is the purpose of a constructor?|To delete an object|To initialize an object|To copy a function|To stop a loop|B
+Which access specifier makes members accessible only within the same class?|Public|Protected|Private|Friend|C
+The '&&' operator represents:|Logical OR|Logical AND|Bitwise AND|Assignment|B
+What does 'DSA' stand for?|Data Signal Analysis|Digital Storage Area|Data Structures and Algorithms|Direct System Access|C
+Which of the following is used to end a statement in C++?|:|.;|,|C
+What is a pointer?|A variable that stores a value|A variable that stores a memory address|A type of loop|A keyword in OOP|B
+Which data structure is best for BFS (Breadth-First Search)?|Stack|Queue|Priority Queue|Deque|B
+Inheritance allows a class to:|Hide data|Acquire properties of another class|Delete its own methods|Be used as a variable|B
+What is the result of 5 / 2 in integer division?|2.5|2|3|0|B
+Which keyword is used to return a value from a function?|return|break|continue|exit|A

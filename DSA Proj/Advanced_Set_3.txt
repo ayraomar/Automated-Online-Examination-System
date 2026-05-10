@@ -1,0 +1,20 @@
+What is the time complexity of building a Heap from an unordered array of size n?|O(n log n)|O(n)|O(n^2)|O(log n)|B
+Which of the following is true about an Abstract Class?|It can be instantiated|It must contain at least one pure virtual function|It cannot have constructors|It cannot have static methods|B
+In the context of AVL Trees, what is the maximum balance factor allowed for any node?|0|1|2|Unlimited|B
+Which design pattern ensures a class has only one instance?|Factory|Observer|Singleton|Decorator|C
+What is the space complexity of an adjacency matrix for a graph with V vertices?|O(V)|O(E)|O(V + E)|O(V^2)|D
+In C++, what is "Object Slicing"?|Deleting a part of an object|Assigning a derived object to a base object|Passing by reference|Converting int to object|B
+Which of the following is a Self-Balancing Binary Search Tree?|Splay Tree|B-Tree|Red-Black Tree|All of the above|D
+What is the 'Rule of Three' in C++?|Constructor/Destructor/Copy|Define Destructor/Copy/Assignment together|Three levels of inheritance|Three access specifiers|B
+What is the time complexity of the Floyd-Warshall Algorithm?|O(V^2)|O(E log V)|O(V^3)|O(V . E)|C
+A 'Trie' data structure is most efficient for:|Numerical sorting|Prefix-based string searching|Finding the shortest path|Balancing heights|B
+What is the primary advantage of a 'B+ Tree' over a 'B-Tree' in databases?|Smaller height|Faster single key search|Better range queries via linked leaves|Uses less memory|C
+Which of the following is NOT true about 'Pure Virtual Destructors'?|They make a class abstract|They must be defined outside the class|They prevent object deletion|They are used in base classes|C
+What is a 'Perfect Hash Function'?|A function with no collisions|A function mapping to a range|Used in cryptography|A function that is O(1)|A
+In Amortized Analysis, what is the complexity of 'append' in a Dynamic Array?|O(n)|O(log n)|O(1)|O(n^2)|C
+What is 'RAII' (Resource Acquisition Is Initialization)?|A way to initialize variables|Resource life tied to object lifetime|A type of inheritance|Memory management in Java|B
+Which algorithm is used to find strongly connected components?|Kruskal's|Tarjan's|Bellman-Ford|Prim's|B
+What is the purpose of a 'Virtual Base Class' in C++?|Prevent multiple base copies in hybrid inheritance|Make class abstract|Speed up compilation|Hide data|A
+A 'Red-Black Tree' ensures the longest path is no more than ___ times the shortest.|1.5|2|3|log n|B
+Which of the following is a 'Stable' and 'In-place' sorting algorithm?|Merge Sort|Quick Sort|Insertion Sort|Heap Sort|C
+What is the 'Liskov Substitution Principle'?|Derived classes must be substitutable for base classes|Function replacement|Private data access|Immutable objects|A

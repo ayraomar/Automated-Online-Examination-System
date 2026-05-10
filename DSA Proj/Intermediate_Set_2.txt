@@ -1,0 +1,20 @@
+What is the time complexity of a Binary Search on a sorted array?|O(n)|O(n log n)|O(log n)|O(1)|C
+Which of the following allows "Multiple Inheritance" in Java?|Classes|Interfaces|Abstract Classes|Not supported at all|B
+What happens in a "Deep Copy"?|Only pointers are copied|The actual data is duplicated in new memory|The original object is deleted|No memory is allocated|B
+Which sorting algorithm has the worst-case complexity of O(n^2) but is often fast in practice?|Merge Sort|Heap Sort|Quick Sort|Counting Sort|C
+A 'Virtual Function' is primarily used to achieve:|Compile-time Polymorphism|Runtime Polymorphism|Encapsulation|Data Hiding|B
+In a Singly Linked List, what is the time complexity to delete the last node?|O(1)|O(n)|O(log n)|O(1) if tail is known|B
+What is a 'Friend Function' in C++?|A function that can access private members|A function that belongs to no class|A member of a derived class|A constructor|A
+Which data structure is typically used to implement a recursive function call stack?|Heap|Queue|Stack|Hash Table|C
+What is the 'this' pointer in C++?|A pointer to the parent class|A pointer to the current object instance|A pointer to the main function|A null pointer|B
+A Full Binary Tree with n leaves has how many total nodes?|2n|2n - 1|n^2|log n|B
+Which of these is an example of "Composition"?|A 'Car' has an 'Engine'|A 'Car' is a 'Vehicle'|A 'Car' can 'Drive'|None|A
+What is a Memory Leak?|When the RAM is full|When allocated memory is not deallocated|When a pointer points to NULL|When a program crashes|B
+Which algorithm is used to find the shortest path in a weighted graph?|Prim’s|Dijkstra’s|Kruskal’s|Huffman Coding|B
+What is the "Diamond Problem" in OOP?|Circular Dependency|Ambiguity in Multiple Inheritance|Memory Overflow|Recursive Class Definition|B
+What is the load factor of a Hash Table?|Buckets / Elements|Elements / Buckets|Complexity of Hashing|Size of the table|B
+Which of the following is NOT a stable sorting algorithm?|Insertion Sort|Merge Sort|Quick Sort|Bubble Sort|C
+What does the 'static' keyword do to a class member?|Makes it constant|Makes it shared across all instances|Makes it private|Makes it thread-safe|B
+A Circular Queue solves which problem of a Linear Queue?|Overflow|Underflow|Wasted space at the front|Slow insertion|C
+What is the difference between Overloading and Overriding?|Overloading is at runtime|Overriding requires inheritance|Overloading happens in different classes|They are the same|B
+Which traversal of a Binary Search Tree (BST) produces sorted output?|Pre-order|Post-order|In-order|Level-order|C
