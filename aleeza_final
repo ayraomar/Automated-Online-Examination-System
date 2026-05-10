@@ -1,0 +1,54 @@
+class QuestionList {
+public:
+    QuestionNode* head;
+    QuestionNode* tail;
+    int           size;
+
+    QuestionList() : head(nullptr), tail(nullptr), size(0) {}
+
+    // Append a new question to the back of the DLL
+    void append(int idx, string q, string o1, string o2, string o3, string o4) {
+        QuestionNode* node = new QuestionNode(idx, q, o1, o2, o3, o4);
+        if (!head) {
+            head = tail = node;
+        } else {
+            tail->next  = node; 
+            node->prev  = tail;  
+            tail        = node;
+        }
+        size++;
+    }
+
+    bool validateLinks() const {
+        if (!head) return true;
+
+        // Forward pass: check prev links
+        QuestionNode* cur = head;
+        if (cur->prev != nullptr) return false;
+
+        while (cur->next) {
+            if (cur->next->prev != cur) return false;
+            cur = cur->next;
+        }
+        if (cur != tail) return false;
+        cur = tail;
+        if (cur->next != nullptr) return false;
+
+        while (cur->prev) {
+            if (cur->prev->next != cur) return false;
+            cur = cur->prev;
+        }
+        if (cur != head) return false;
+
+        return true;
+    }
+
+    ~QuestionList() {
+        QuestionNode* cur = head;
+        while (cur) {
+            QuestionNode* tmp = cur;
+            cur = cur->next;
+            delete tmp;
+        }
+    }
+};
